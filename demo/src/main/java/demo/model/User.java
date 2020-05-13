@@ -43,9 +43,9 @@ public class User {
     inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
 
-//  @ManyToMany(mappedBy = "users")
-//  private Set<Book> books = new HashSet<>();
-//
-//  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//  private Set<Renting> renterRentingSet = new HashSet<>();
+  @ManyToMany(mappedBy = "users")
+  private Set<Book> books = new HashSet<>();
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<Renting> renterRentingSet = new HashSet<>();
 }

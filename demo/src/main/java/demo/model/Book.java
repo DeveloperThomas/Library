@@ -63,4 +63,9 @@ public class Book {
   @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"),
   inverseJoinColumns = @JoinColumn(name = "author_id"))
   private Set<Author> authors = new HashSet<>();
+
+  @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
+  @JoinTable(name = "user_owning", joinColumns = @JoinColumn(name = "book_id"),
+          inverseJoinColumns = @JoinColumn(name = "user_id"))
+  private Set<User> users = new HashSet<>();
 }
