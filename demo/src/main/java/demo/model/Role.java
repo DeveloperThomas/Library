@@ -12,6 +12,17 @@ public class Role {
   @Enumerated(value = EnumType.STRING)
   private RoleName roleName;
 
+
+  public RoleName getRoleName() {
+    return roleName;
+  }
+
+  public void setRoleName(RoleName roleName) {
+    this.roleName = roleName;
+  }
+
+
+
   public Long getId() {
     return id;
   }

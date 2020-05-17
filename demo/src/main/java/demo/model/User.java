@@ -38,7 +38,23 @@ public class User {
         this.password = password;
     }
 
-  @ManyToMany(fetch = FetchType.EAGER)
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public Set<Renting> getRenterRentingSet() {
+        return renterRentingSet;
+    }
+
+    public void setRenterRentingSet(Set<Renting> renterRentingSet) {
+        this.renterRentingSet = renterRentingSet;
+    }
+
+    @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
