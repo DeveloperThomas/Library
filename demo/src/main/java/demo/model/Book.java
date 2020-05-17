@@ -1,5 +1,7 @@
 package demo.model;
 
+import demo.dto.AuthorDataTransfer;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -24,6 +26,7 @@ public class Book {
     this.id = id;
     this.title = title;
     this.publicationDate = date;
+    this.rented = false;
   }
 
   public Long getId() {
@@ -50,7 +53,7 @@ public class Book {
     this.publicationDate = publicationDate;
   }
 
-  public boolean isRented() {
+  public boolean getRented() {
     return rented;
   }
 
@@ -58,6 +61,22 @@ public class Book {
     this.rented = rented;
   }
 
+
+  public Set<Author> getAuthors() {
+    return authors;
+  }
+
+  public void setAuthors(Set<Author> authors) {
+    this.authors = authors;
+  }
+
+  public Set<User> getUsers() {
+    return users;
+  }
+
+  public void setUsers(Set<User> users) {
+    this.users = users;
+  }
 
   @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
   @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"),

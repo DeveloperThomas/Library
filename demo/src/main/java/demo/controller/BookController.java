@@ -1,12 +1,11 @@
 package demo.controller;
 
+import demo.dto.BookDataTransfer;
 import demo.model.Book;
 import demo.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,35 +13,33 @@ import java.util.Optional;
 @RequestMapping("/api/books")
 public class BookController {
 
-    private BookService bookList;
+    private BookService bookService;
 
     @Autowired
     public BookController(BookService bookService) {
-        this.bookList = bookService;
+        this.bookService = bookService;
     }
 
     @GetMapping("/all")
-    public Iterable<Book> getAllBooks() {
-        return bookList.findAll();
+    public List<BookDataTransfer> getAllBooks() {
+        return bookService.findAllBooksDataTransfer();
     }
 
     @GetMapping("/{id}")
-    public Optional<Book> getBookById(@PathVariable Long id) {
-        return bookList.findAllById(id);
+    public BookDataTransfer getBookById(@PathVariable Long id) {
+        return bookService.findBookDataTransferById(id);
     }
 
     @PostMapping
-    public Book addBook(@RequestBody Book book) {
-        return bookList.save(book);
-    }
+    public BookDataTransfer addBook(@RequestBody BookDataTransfer book) { return bookService.addBookDataTransfer(book); }
 
-    @PutMapping
-    public Book updateBook(@RequestBody Book book) {
-        return bookList.save(book);
+    @PutMapping("/{id}")
+    public BookDataTransfer updateBook(@PathVariable Long id, @RequestBody BookDataTransfer bookDataTransfer) {
+        return bookService.updateBookDataTransfer(id, bookDataTransfer);
     }
 
     @DeleteMapping("/{id}")
     public void deleteBook(@PathVariable Long id) {
-        bookList.deleteById(id);
+        bookService.deleteBookDataTransferById(id);
     }
 }
