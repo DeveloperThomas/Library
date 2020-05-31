@@ -43,4 +43,9 @@ public class UserController {
         userService.deleteUserDataTransferById(id);
     }
 
+    @GetMapping("/search")
+    public List<UserDataTransfer> searchUser(@RequestParam String name) {
+        return userService.searchByUsername(name);
+    }
+
 }

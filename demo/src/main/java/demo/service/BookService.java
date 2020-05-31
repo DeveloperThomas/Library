@@ -81,7 +81,11 @@ public class BookService {
         return bookMap.map(bookRepository.save(book));
     }
 
-
+    public BookDataTransfer changeRented(Long id){
+        Book book = findBookById(id);
+        book.setRented(!book.getRented());
+        return bookMap.map(bookRepository.save(book));
+    }
 
     public void deleteBookDataTransferById(Long id) {
         bookRepository.deleteById(id);
