@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -61,5 +62,13 @@ public class UserService {
 
     public User findUserById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Cannot find your author"));
+    }
+
+    public List<UserDataTransfer> searchByUsername(String name) {
+        return userRepository
+                .findByName(name)
+                .stream()
+                .map(user -> userMap.map(user))
+                .collect(Collectors.toList());
     }
 }

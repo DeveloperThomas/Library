@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -80,9 +81,44 @@ public class BookService {
         return bookMap.map(bookRepository.save(book));
     }
 
-
+    public BookDataTransfer changeRented(Long id){
+        Book book = findBookById(id);
+        book.setRented(!book.getRented());
+        return bookMap.map(bookRepository.save(book));
+    }
 
     public void deleteBookDataTransferById(Long id) {
         bookRepository.deleteById(id);
+    }
+
+    public List<BookDataTransfer> search(String bookTitle, Integer bookYear, String bookAuthor) {
+        List<BookDataTransfer> bookDataTransfers = new ArrayList<>();
+        List<Book> foundBooksByTitle = new ArrayList<>();
+        if(bookTitle != null){
+            foundBooksByTitle = bookRepository.findAll().stream().filter(b -> b.getTitle().toLowerCase().contains(bookTitle.toLowerCase())).collect(Collectors.toList());
+        }
+        else
+            foundBooksByTitle = bookRepository.findAll();
+
+        List<Book> foundBooksByYear = new ArrayList<>();
+        if(bookYear != null){
+            foundBooksByYear = bookRepository.findAll().stream().filter(b -> b.getPublicationDate().getYear() == bookYear).collect(Collectors.toList());
+        }
+        else
+            foundBooksByYear = bookRepository.findAll();
+
+        List<Book> foundBooksByAuthor = new ArrayList<>();
+        if(bookAuthor != null){
+            foundBooksByAuthor = bookRepository.findAll().stream().filter(b -> b.getAuthors().contains(bookAuthor)).collect(Collectors.toList());
+        }
+        else
+            foundBooksByAuthor = bookRepository.findAll();
+
+        List<Book> foundBooks = new ArrayList<>(foundBooksByTitle);
+        foundBooks.retainAll(foundBooksByYear);
+        foundBooks.retainAll(foundBooksByAuthor);
+        foundBooks.forEach(b -> bookDataTransfers.add(bookMap.map(b)));
+
+        return bookDataTransfers;
     }
 }

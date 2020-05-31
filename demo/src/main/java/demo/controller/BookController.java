@@ -42,4 +42,9 @@ public class BookController {
     public void deleteBook(@PathVariable Long id) {
         bookService.deleteBookDataTransferById(id);
     }
+
+    @GetMapping("/search")
+    public List<BookDataTransfer> searchBook(@RequestParam String bookTitle, @RequestParam Integer bookYear, @RequestParam String bookAuthor){
+        return bookService.search(bookTitle, bookYear, bookAuthor);
+    }
 }
