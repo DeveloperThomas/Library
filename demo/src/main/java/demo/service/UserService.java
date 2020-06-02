@@ -64,9 +64,9 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Cannot find your author"));
     }
 
-    public List<UserDataTransfer> searchByUsername(String name) {
+    public List<UserDataTransfer> searchByUsername(String username) {
         return userRepository
-                .findByName(name)
+                .findByUsername(username)
                 .stream()
                 .map(user -> userMap.map(user))
                 .collect(Collectors.toList());
