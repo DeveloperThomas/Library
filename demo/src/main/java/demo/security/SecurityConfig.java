@@ -19,13 +19,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         UserDetails user = User.withDefaultPasswordEncoder()
                 .username("user")
                 .password("user1")
-                .roles("USER")
+                .roles("user")
                 .build();
 
         UserDetails admin = User.withDefaultPasswordEncoder()
                 .username("admin")
                 .password("admin1")
-                .roles("ADMIN")
+                .roles("admin")
                 .build();
 
         return new InMemoryUserDetailsManager(user, admin);
@@ -40,16 +40,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected  void configure(HttpSecurity http) throws Exception {
         http.httpBasic().and().authorizeRequests()
                 .mvcMatchers(HttpMethod.GET, "/api/books/**").permitAll()
-                .mvcMatchers(HttpMethod.POST, "/api/books/**").hasRole("ADMIN")
-                .mvcMatchers(HttpMethod.DELETE, "/api/books/**").hasRole("ADMIN")
-                .mvcMatchers(HttpMethod.PUT, "/api/books/**").hasRole("ADMIN")
+                .mvcMatchers(HttpMethod.POST, "/api/books/**").hasRole("admin")
+                .mvcMatchers(HttpMethod.DELETE, "/api/books/**").hasRole("admin")
+                .mvcMatchers(HttpMethod.PUT, "/api/books/**").hasRole("admin")
 
                 .mvcMatchers(HttpMethod.GET, "/api/authors/**").permitAll()
-                .mvcMatchers(HttpMethod.POST, "/api/authors/**").hasRole("ADMIN")
-                .mvcMatchers(HttpMethod.DELETE, "/api/authors/**").hasRole("ADMIN")
+                .mvcMatchers(HttpMethod.POST, "/api/authors/**").hasRole("admin")
+                .mvcMatchers(HttpMethod.DELETE, "/api/authors/**").hasRole("admin")
                 .mvcMatchers(HttpMethod.PUT, "/api/authors/**").authenticated()
 
-                .mvcMatchers("/api/users/**").hasRole("ADMIN")
+                .mvcMatchers("/api/users/**").permitAll()
                 .and()
                 .formLogin().permitAll()
                 .and()
