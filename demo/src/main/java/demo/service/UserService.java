@@ -1,14 +1,18 @@
 package demo.service;
 
+import demo.dao.RoleRepository;
 import demo.dao.UserRepository;
 import demo.dto.UserDataTransfer;
 import demo.map.UserMap;
+import demo.model.Role;
 import demo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,11 +20,13 @@ public class UserService {
 
     private UserRepository userRepository;
     private UserMap userMap;
+    private RoleRepository roleRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserMap userMap) {
+    public UserService(UserRepository userRepository, UserMap userMap, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.userMap = userMap;
+        this.roleRepository = roleRepository;
     }
 
     public List<UserDataTransfer> findAllUsersDataTransfer() {
@@ -37,7 +43,11 @@ public class UserService {
         User user = new User();
         user.setUsername(userDataTransfer.getUsername());
         user.setPassword(userDataTransfer.getPassword());
-        user.setRoles(user.getRoles());
+        Set<Role> roles = new HashSet<>();
+        userDataTransfer.getRoles().forEach(r -> roles
+                .add(roleRepository.findByRoleName(r)
+                        .orElseThrow(() -> new RuntimeException("Role doesn't exists"))));
+        user.setRoles(roles);
         return userMap.map(userRepository.save(user));
     }
 
