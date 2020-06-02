@@ -9,10 +9,10 @@ import lombok.Setter;
 @Setter
 public class RentingDataTransfer {
     private Long id;
-    private User user;
-    private Book book;
+    private UserDataTransfer user;
+    private BookDataTransfer book;
 
-    public RentingDataTransfer(Long id, User user, Book book){
+    public RentingDataTransfer(Long id, UserDataTransfer user, BookDataTransfer book){
         this.id = id;
         this.user = user;
         this.book = book;

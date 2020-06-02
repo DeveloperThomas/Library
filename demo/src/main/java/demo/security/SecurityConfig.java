@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(HttpMethod.DELETE, "/api/authors/**").hasRole("ADMIN")
                 .mvcMatchers(HttpMethod.PUT, "/api/authors/**").authenticated()
 
-                .mvcMatchers("/api/users/**").hasRole("ADMIN")
+                .mvcMatchers("/api/users/**").permitAll()
                 .and()
                 .formLogin().permitAll()
                 .and()

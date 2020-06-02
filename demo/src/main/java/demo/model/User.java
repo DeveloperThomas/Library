@@ -62,6 +62,6 @@ public class User {
   @ManyToMany(mappedBy = "users")
   private Set<Book> books = new HashSet<>();
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "user")
   private Set<Renting> renterRentingSet = new HashSet<>();
 }
