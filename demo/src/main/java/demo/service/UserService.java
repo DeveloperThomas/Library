@@ -7,6 +7,7 @@ import demo.map.UserMap;
 import demo.model.Role;
 import demo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,6 +22,9 @@ public class UserService {
     private UserRepository userRepository;
     private UserMap userMap;
     private RoleRepository roleRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserService(UserRepository userRepository, UserMap userMap, RoleRepository roleRepository) {
@@ -40,15 +44,21 @@ public class UserService {
     }
 
     public UserDataTransfer addUserDataTransfer(UserDataTransfer userDataTransfer) {
-        User user = new User();
-        user.setUsername(userDataTransfer.getUsername());
-        user.setPassword(userDataTransfer.getPassword());
-        Set<Role> roles = new HashSet<>();
-        userDataTransfer.getRoles().forEach(r -> roles
-                .add(roleRepository.findByRoleName(r)
-                        .orElseThrow(() -> new RuntimeException("Role doesn't exists"))));
-        user.setRoles(roles);
-        return userMap.map(userRepository.save(user));
+        if(!checkUsername(userDataTransfer.getUsername())){
+            throw new RuntimeException("That username is taken");
+        }
+        else {
+            User user = new User();
+            user.setUsername(userDataTransfer.getUsername());
+//          user.setPassword(userDataTransfer.getPassword());
+            user.setPassword(passwordEncoder.encode(userDataTransfer.getPassword()));
+            Set<Role> roles = new HashSet<>();
+            userDataTransfer.getRoles().forEach(r -> roles
+                    .add(roleRepository.findByRoleName(r)
+                            .orElseThrow(() -> new RuntimeException("Role doesn't exists"))));
+            user.setRoles(roles);
+            return userMap.map(userRepository.save(user));
+        }
     }
 
     public UserDataTransfer updateUserDataTransfer(Long id, UserDataTransfer userDataTransfer) {
@@ -80,5 +90,9 @@ public class UserService {
                 .stream()
                 .map(user -> userMap.map(user))
                 .collect(Collectors.toList());
+    }
+
+    private boolean checkUsername(String username){
+        return userRepository.findAll().stream().noneMatch(u -> u.getUsername().equals(username));
     }
 }
