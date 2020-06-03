@@ -30,9 +30,13 @@ public class RentingService {
         this.userRepository = userRepository;
     }
 
-    public RentingDataTransfer createRentingDataTransfer(Object principal, Long bookId) {
+    public RentingDataTransfer createRentingDataTransfer(String principal, Long bookId) {
 
-        Collection<User> user = userRepository.findByUsername((String)principal);
+        String[] tmp = principal.split(";");
+        int first = tmp[0].indexOf(":"); int second = tmp[0].indexOf(":", first + 1);
+        String username = tmp[0].substring(second+2);
+
+        Collection<User> user = userRepository.findByUsername(username);
         Book book = bookService.findBookById(bookId);
         if(!book.getRented()){
             Renting renting = new Renting();
