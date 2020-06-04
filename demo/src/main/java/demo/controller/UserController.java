@@ -3,6 +3,8 @@ package demo.controller;
 import demo.dto.UserDataTransfer;
 import demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,9 +35,10 @@ public class UserController {
         return userService.addUserDataTransfer(userDataTransfer);
     }
 
-    @PutMapping("/{id}")
-    public UserDataTransfer updateUser(@PathVariable Long id, @RequestBody UserDataTransfer userDataTransfer){
-        return userService.updateUserDataTransfer(id, userDataTransfer);
+    @PutMapping("")
+    public UserDataTransfer updateUser(@RequestBody UserDataTransfer userDataTransfer){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return userService.updateUserDataTransfer(auth.getPrincipal().toString(), userDataTransfer);
     }
 
     @DeleteMapping("/{id}")
