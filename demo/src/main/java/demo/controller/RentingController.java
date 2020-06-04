@@ -29,12 +29,13 @@ public class RentingController {
     }
 
     @PostMapping("/{bookId}")
-    public RentingDataTransfer addRenting(@CurrentUser UserPrincipal userPrincipal, @PathVariable Long bookId) {
+    public RentingDataTransfer addRenting(@PathVariable Long bookId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return rentingService.createRentingDataTransfer(auth.getPrincipal().toString(), bookId); }
 
-    @DeleteMapping("/{id}")
-    public void deleteRenting(@PathVariable Long id) {
-        rentingService.deleteRentingDataTransferById(id);
+    @DeleteMapping("/{bookId}")
+    public void deleteRenting(@PathVariable Long bookId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        rentingService.deleteRentingDataTransferById(auth.getPrincipal().toString(), bookId);
     }
 }

@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,13 +58,20 @@ public class UserService {
         }
     }
 
-    public UserDataTransfer updateUserDataTransfer(Long id, UserDataTransfer userDataTransfer) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Cannot found your author"));
+    public UserDataTransfer updateUserDataTransfer(String principal, UserDataTransfer userDataTransfer) {
+        String[] tmp = principal.split(";");
+        int first = tmp[0].indexOf(":"); int second = tmp[0].indexOf(":", first + 1);
+        String username = tmp[0].substring(second+2);
+
+        Collection<User> users = userRepository.findByUsername(username);
+        if(users==null) throw new RuntimeException("User doesn't exist!");
+        User user = users.stream().findFirst().get();
+
         if(userDataTransfer.getUsername() != null) {
             user.setUsername(userDataTransfer.getUsername());
         }
         if(userDataTransfer.getPassword() != null) {
-            user.setPassword(userDataTransfer.getPassword());
+            user.setPassword(passwordEncoder.encode(userDataTransfer.getPassword()));
         }
 //        if(userDataTransfer.getRoles().isEmpty() && user.getRoles().size()!=0) {
 //            user.setRoles(user.getRoles());
