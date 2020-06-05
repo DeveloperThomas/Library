@@ -37,7 +37,7 @@ public class RentingService {
         String username = tmp[0].substring(second+2);
 
         Collection<User> user = userRepository.findByUsername(username);
-        if(user==null) throw new RuntimeException("User doesn't exist!");
+        if(user==null || user.size()==0) throw new RuntimeException("User doesn't exist!");
         Book book = bookService.findBookById(bookId);
         if(!book.getRented()){
             Renting renting = new Renting();
@@ -55,7 +55,7 @@ public class RentingService {
         String username = tmp[0].substring(second+2);
 
         Collection<User> user = userRepository.findByUsername(username);
-        if(user==null) throw new RuntimeException("User doesn't exist!");
+        if(user==null || user.size()==0) throw new RuntimeException("User doesn't exist!");
         Book book = bookService.findBookById(id);
         User userTmp = user.stream().findFirst().get();
         if(book.getRented()){

@@ -64,7 +64,7 @@ public class UserService {
         String username = tmp[0].substring(second+2);
 
         Collection<User> users = userRepository.findByUsername(username);
-        if(users==null) throw new RuntimeException("User doesn't exist!");
+        if(users==null || users.size()==0) throw new RuntimeException("User doesn't exist!");
         User user = users.stream().findFirst().get();
 
         if(userDataTransfer.getUsername() != null) {

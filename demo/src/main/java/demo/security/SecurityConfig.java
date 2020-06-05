@@ -43,24 +43,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected  void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/api/books/**").permitAll()
-                .antMatchers("/api/users/**").permitAll()
+        http.csrf().disable();
+        http.cors().and().authorizeRequests()
+                .antMatchers("/api/books/**").authenticated()
+                .antMatchers("/api/users/**").hasRole("ADMIN")
                 .antMatchers("/api/authors/**").permitAll()
-                .antMatchers("/logIn").permitAll()
-                .and()
-                .formLogin().permitAll()
-                .successHandler(new AuthenticationSuccessHandler() {
-                    @Override
-                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                                        Authentication authentication) throws IOException, ServletException {
-                        redirectStrategy.sendRedirect(request, response, "/api/books/all");
-                    }
-                })
                 .and()
                 .logout().permitAll()
                 .and()
-                .csrf().disable();
+                .httpBasic();
     }
 
     @Bean
