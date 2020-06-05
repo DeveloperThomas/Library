@@ -94,7 +94,7 @@ public class BookService {
     public List<BookDataTransfer> search(String bookTitle, Integer bookYear, String bookAuthor) {
         List<BookDataTransfer> bookDataTransfers = new ArrayList<>();
         List<Book> foundBooksByTitle = new ArrayList<>();
-        if(bookTitle != null){
+        if(bookTitle != null && !bookTitle.isEmpty()){
             foundBooksByTitle = bookRepository.findAll().stream().filter(b -> b.getTitle().toLowerCase().contains(bookTitle.toLowerCase())).collect(Collectors.toList());
         }
         else
@@ -108,8 +108,16 @@ public class BookService {
             foundBooksByYear = bookRepository.findAll();
 
         List<Book> foundBooksByAuthor = new ArrayList<>();
-        if(bookAuthor != null){
-            foundBooksByAuthor = bookRepository.findAll().stream().filter(b -> b.getAuthors().contains(bookAuthor)).collect(Collectors.toList());
+        if(bookAuthor != null && !bookAuthor.isEmpty()){
+            List<Book> books = bookRepository.findAll();
+            List<Book> finalFoundBooksByAuthor = foundBooksByAuthor;
+            books.forEach(b -> {
+                b.getAuthors().forEach(author -> {
+                    if(author.getLastName().toLowerCase().contains(bookAuthor.toLowerCase())) finalFoundBooksByAuthor.add(b);
+                });
+            });
+            //foundBooksByAuthor = bookRepository.findAll().stream().filter(b -> b.getAuthors().contains(bookAuthor)).collect(Collectors.toList());
+
         }
         else
             foundBooksByAuthor = bookRepository.findAll();
