@@ -120,4 +120,9 @@ public class UserService {
     private boolean checkUsername(String username){
         return userRepository.findAll().stream().noneMatch(u -> u.getUsername().equals(username));
     }
+
+    public UserDataTransfer getUserDataTransferByUsername(String username) {
+        return userMap.map(userRepository
+                .findByUsername(username).stream().findFirst().get());
+    }
 }
