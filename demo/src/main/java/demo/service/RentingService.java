@@ -62,9 +62,17 @@ public class RentingService {
         Book book = bookService.findBookById(id);
         User userTmp = user.stream().findFirst().get();
         if(book.getRented()){
-            Renting renting = rentingRepository.findByUserAndBook(userTmp, book).orElseThrow(() -> new RuntimeException("Renting not found or you aren't it owner"));
-            bookService.changeRented(book.getId());
-            rentingRepository.deleteById(renting.getId());
+            if(Role.equals("ROLE_ADMIN")){
+                Renting renting = rentingRepository.findByBook(book).orElseThrow(() -> new RuntimeException("Renting not found"));
+                bookService.changeRented(book.getId());
+                rentingRepository.deleteById(renting.getId());
+            }
+            else{
+                Renting renting = rentingRepository.findByUserAndBook(userTmp, book).orElseThrow(() -> new RuntimeException("Renting not found or you aren't it owner"));
+                bookService.changeRented(book.getId());
+                rentingRepository.deleteById(renting.getId());
+            }
+
         }
         else throw new RuntimeException("This rented doesn't exist!");
     }

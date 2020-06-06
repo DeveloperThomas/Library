@@ -36,8 +36,8 @@ public class UserController {
         return userService.addUserDataTransfer(userDataTransfer);
     }
 
-    @PutMapping("")
-    public UserDataTransfer updateUser(@RequestBody Long userID, @RequestBody UserDataTransfer userDataTransfer){
+    @PutMapping("/{userID}")
+    public UserDataTransfer updateUser(@PathVariable Long userID, @RequestBody UserDataTransfer userDataTransfer){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userService.updateUserDataTransfer(auth.getPrincipal().toString(), userID, userDataTransfer);
     }
