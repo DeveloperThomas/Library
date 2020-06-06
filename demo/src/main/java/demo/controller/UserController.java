@@ -26,6 +26,11 @@ public class UserController {
         return userService.findAllUsersDataTransfer();
     }
 
+    @GetMapping("/get/{username}")
+    public UserDataTransfer getUserByUsername(@PathVariable String username){
+            return userService.getUserDataTransferByUsername(username);
+    }
+
     @GetMapping("/{id}")
     public UserDataTransfer getUserById(@PathVariable Long id){
         return userService.findUserDataTransferById(id);
