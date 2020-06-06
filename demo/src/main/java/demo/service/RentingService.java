@@ -54,6 +54,9 @@ public class RentingService {
         int first = tmp[0].indexOf(":"); int second = tmp[0].indexOf(":", first + 1);
         String username = tmp[0].substring(second+2);
 
+        int placeRole = tmp[6].indexOf(":");
+        String Role = tmp[6].substring(placeRole+2);
+
         Collection<User> user = userRepository.findByUsername(username);
         if(user==null || user.size()==0) throw new RuntimeException("User doesn't exist!");
         Book book = bookService.findBookById(id);

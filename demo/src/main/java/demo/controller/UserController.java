@@ -37,14 +37,15 @@ public class UserController {
     }
 
     @PutMapping("")
-    public UserDataTransfer updateUser(@RequestBody UserDataTransfer userDataTransfer){
+    public UserDataTransfer updateUser(@RequestBody Long userID, @RequestBody UserDataTransfer userDataTransfer){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return userService.updateUserDataTransfer(auth.getPrincipal().toString(), userDataTransfer);
+        return userService.updateUserDataTransfer(auth.getPrincipal().toString(), userID, userDataTransfer);
     }
 
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id){
-        userService.deleteUserDataTransferById(id);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        userService.deleteUserDataTransferById(auth.getPrincipal().toString(), id);
     }
 
     @GetMapping("/search")
