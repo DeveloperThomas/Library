@@ -54,14 +54,25 @@ public class RentingService {
         int first = tmp[0].indexOf(":"); int second = tmp[0].indexOf(":", first + 1);
         String username = tmp[0].substring(second+2);
 
+        int placeRole = tmp[6].indexOf(":");
+        String Role = tmp[6].substring(placeRole+2);
+
         Collection<User> user = userRepository.findByUsername(username);
         if(user==null || user.size()==0) throw new RuntimeException("User doesn't exist!");
         Book book = bookService.findBookById(id);
         User userTmp = user.stream().findFirst().get();
         if(book.getRented()){
-            Renting renting = rentingRepository.findByUserAndBook(userTmp, book).orElseThrow(() -> new RuntimeException("Renting not found or you aren't it owner"));
-            bookService.changeRented(book.getId());
-            rentingRepository.deleteById(renting.getId());
+            if(Role.equals("ROLE_ADMIN")){
+                Renting renting = rentingRepository.findByBook(book).orElseThrow(() -> new RuntimeException("Renting not found"));
+                bookService.changeRented(book.getId());
+                rentingRepository.deleteById(renting.getId());
+            }
+            else{
+                Renting renting = rentingRepository.findByUserAndBook(userTmp, book).orElseThrow(() -> new RuntimeException("Renting not found or you aren't it owner"));
+                bookService.changeRented(book.getId());
+                rentingRepository.deleteById(renting.getId());
+            }
+
         }
         else throw new RuntimeException("This rented doesn't exist!");
     }

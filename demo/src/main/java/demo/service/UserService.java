@@ -58,7 +58,7 @@ public class UserService {
         }
     }
 
-    public UserDataTransfer updateUserDataTransfer(String principal, UserDataTransfer userDataTransfer) {
+    public UserDataTransfer updateUserDataTransfer(String principal, Long userID, UserDataTransfer userDataTransfer) {
         String[] tmp = principal.split(";");
         int first = tmp[0].indexOf(":"); int second = tmp[0].indexOf(":", first + 1);
         String username = tmp[0].substring(second+2);
@@ -67,21 +67,42 @@ public class UserService {
         if(users==null || users.size()==0) throw new RuntimeException("User doesn't exist!");
         User user = users.stream().findFirst().get();
 
-        if(userDataTransfer.getUsername() != null) {
-            user.setUsername(userDataTransfer.getUsername());
-        }
-        if(userDataTransfer.getPassword() != null) {
-            user.setPassword(passwordEncoder.encode(userDataTransfer.getPassword()));
-        }
+        int placeRole = tmp[6].indexOf(":");
+        String Role = tmp[6].substring(placeRole+2);
+
+        User userToEdit = userRepository.findById(userID).orElseThrow(() -> new RuntimeException("Cannot find user!"));
+        if(userToEdit.getId().equals(user.getId()) || Role.equals("ROLE_ADMIN"))
+        {
+            if(userDataTransfer.getUsername() != null) {
+                user.setUsername(userDataTransfer.getUsername());
+            }
+            if(userDataTransfer.getPassword() != null) {
+                user.setPassword(passwordEncoder.encode(userDataTransfer.getPassword()));
+            }
 //        if(userDataTransfer.getRoles().isEmpty() && user.getRoles().size()!=0) {
 //            user.setRoles(user.getRoles());
 //        }
+            return userMap.map(userRepository.save(user));
+        }
+        else throw new RuntimeException("Cannot edit this user!");
 
-        return userMap.map(userRepository.save(user));
     }
 
-    public void deleteUserDataTransferById(Long id) {
-        userRepository.deleteById(id);
+    public void deleteUserDataTransferById(String principal, Long id) {
+        String[] tmp = principal.split(";");
+        int first = tmp[0].indexOf(":"); int second = tmp[0].indexOf(":", first + 1);
+        String username = tmp[0].substring(second+2);
+
+        Collection<User> users = userRepository.findByUsername(username);
+        if(users==null || users.size()==0) throw new RuntimeException("User doesn't exist!");
+        User user = users.stream().findFirst().get();
+
+        int placeRole = tmp[6].indexOf(":");
+        String Role = tmp[6].substring(placeRole+2);
+
+        User userToDelete = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Cannot find user!"));
+        if(userToDelete.getId().equals(user.getId()) || Role.equals("ROLE_ADMIN")) userRepository.deleteById(id);
+        else throw new RuntimeException("Cannot delete this user!");
     }
 
     public User findUserById(Long id) {
