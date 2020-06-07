@@ -28,12 +28,14 @@ public class UserController {
 
     @GetMapping("/get/{username}")
     public UserDataTransfer getUserByUsername(@PathVariable String username){
-            return userService.getUserDataTransferByUsername(username);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return userService.getUserDataTransferByUsername(auth.getPrincipal().toString(), username);
     }
 
     @GetMapping("/{id}")
     public UserDataTransfer getUserById(@PathVariable Long id){
-        return userService.findUserDataTransferById(id);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return userService.findUserDataTransferById(auth.getPrincipal().toString(), id);
     }
 
     @PostMapping()
